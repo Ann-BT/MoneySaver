@@ -137,12 +137,7 @@ export function App() {
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="MoneySaver" className="w-9 h-9 rounded-xl shadow-xs object-cover" />
             <div>
-              <div className="flex items-center gap-1.5">
-                <h1 className="text-sm font-bold text-slate-900 tracking-tight leading-none">MoneySaver</h1>
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-full uppercase tracking-wider">
-                  PRO
-                </span>
-              </div>
+              <h1 className="text-sm font-bold text-slate-900 tracking-tight leading-none">MoneySaver</h1>
               <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-1 tabular-nums">
                 <span>Lương: <strong className="text-slate-800">{formatVND(totalMonthlyIncome)}</strong></span>
                 {currentMonthExtraIncome > 0 && (
@@ -155,9 +150,9 @@ export function App() {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Cloud Sync Status Indicator */}
+            {/* Cloud Sync Status Indicator - Dot only */}
             <div
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200/80 text-[11px] font-medium text-slate-600 shadow-2xs"
+              className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 border border-slate-200/80 shadow-2xs"
               title={
                 syncStatus === 'synced'
                   ? 'Đã đồng bộ thời gian thực với Cloud (Supabase)'
@@ -167,22 +162,13 @@ export function App() {
               }
             >
               {syncStatus === 'syncing' && (
-                <>
-                  <RefreshCw className="w-3 h-3 text-emerald-600 animate-spin" />
-                  <span className="hidden sm:inline">Syncing</span>
-                </>
+                <RefreshCw className="w-3.5 h-3.5 text-emerald-600 animate-spin" />
               )}
               {syncStatus === 'synced' && (
-                <>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                  <span className="hidden sm:inline">Synced</span>
-                </>
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
               )}
               {syncStatus === 'offline' && (
-                <>
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                  <span className="hidden sm:inline">Offline</span>
-                </>
+                <span className="w-2 h-2 rounded-full bg-slate-400"></span>
               )}
             </div>
 

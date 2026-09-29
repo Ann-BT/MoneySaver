@@ -81,9 +81,6 @@ export const EmergencyFundManager: React.FC<EmergencyFundManagerProps> = ({
             <ShieldAlert className="w-4 h-4 text-emerald-600" />
             <span>Quỹ Khẩn Cấp & Đột Xuất</span>
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Dành riêng cho ốm đau, viện phí, tai nạn, sự cố bất khả kháng
-          </p>
         </div>
         <button
           type="button"

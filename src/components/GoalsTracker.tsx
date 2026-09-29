@@ -206,9 +206,6 @@ export const GoalsTracker: React.FC<GoalsTrackerProps> = ({
           <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
             Mục Tiêu & Dự Toán Tích Lũy
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Dòng tiền dồn lần lượt theo thứ tự ưu tiên • Giữ 5s để chỉnh sửa
-          </p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}

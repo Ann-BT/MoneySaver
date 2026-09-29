@@ -79,9 +79,6 @@ export const RecurringManager: React.FC<RecurringManagerProps> = ({
           <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
             Chi Phí Cố Định
           </h2>
-          <p className="text-xs text-slate-500">
-            Theo dõi kỳ thanh toán và đánh dấu khi hoàn tất
-          </p>
         </div>
         <div className="text-right">
           <span className="text-[11px] uppercase tracking-wider text-slate-500 font-bold block">

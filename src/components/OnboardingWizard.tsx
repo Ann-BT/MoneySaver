@@ -92,7 +92,6 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
               <img src="/logo.png" alt="MoneySaver" className="w-10 h-10 rounded-xl shadow-xs object-cover" />
               <div>
                 <h1 className="text-base font-bold tracking-tight text-slate-900 leading-none">MoneySaver</h1>
-                <p className="text-xs text-slate-500 mt-1">Khởi tạo kế hoạch tài chính</p>
               </div>
             </div>
 
