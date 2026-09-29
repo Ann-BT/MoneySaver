@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { FinancialGoal } from '../types';
-import { formatVND } from '../utils/formatters';
-import { DynamicIcon } from './DynamicIcon';
-import { Target, TrendingUp, Calendar, ArrowUp, ArrowDown, Plus, Sparkles, Check } from 'lucide-react';
+import { formatVND, formatNumberWithCommas } from '../utils/formatters';
+import { Target, TrendingUp, Calendar, ArrowUp, ArrowDown, Plus, Sparkles, Check, X } from 'lucide-react';
 
 interface GoalsTrackerProps {
   goals: FinancialGoal[];
@@ -99,62 +98,66 @@ export const GoalsTracker: React.FC<GoalsTrackerProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* Header - Clean Monochrome */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-mono uppercase tracking-wider text-zinc-300 font-semibold">
-            Mục tiêu & Dự toán
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700">
+            Mục Tiêu & Dự Toán Tích Lũy
           </h2>
-          <p className="text-[11px] font-mono text-zinc-500 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Dòng tiền dồn lần lượt theo thứ tự ưu tiên
           </p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 rounded-lg text-[11px] font-mono font-medium transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors"
         >
-          <Plus className="w-3.5 h-3.5" />
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Thêm mục tiêu</span>
         </button>
       </div>
 
       {/* Thẻ Quản lý Lương & Tích lũy */}
-      <div className="p-3.5 rounded-xl bg-black border border-zinc-900 font-mono space-y-2.5">
+      <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-[11px] uppercase tracking-wider text-zinc-500 block">Lương cơ bản hàng tháng</span>
+            <span className="text-[11px] uppercase tracking-wider text-slate-500 font-bold block">
+              Lương cơ bản hàng tháng
+            </span>
             {!isEditingSalary ? (
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-sm font-bold text-white tracking-tight">{formatVND(monthlySalary)}</span>
+                <span className="text-base font-extrabold text-slate-900 tabular-nums">
+                  {formatVND(monthlySalary)}
+                </span>
                 <button
                   onClick={() => {
                     setSalaryInput(monthlySalary.toString());
                     setIsEditingSalary(true);
                   }}
-                  className="text-[11px] text-zinc-400 hover:text-white underline cursor-pointer"
+                  className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 underline cursor-pointer"
                 >
-                  Đổi
+                  Sửa
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSaveSalary} className="flex items-center gap-2 mt-1">
+              <form onSubmit={handleSaveSalary} className="flex items-center gap-1.5 mt-1">
                 <input
                   type="text"
                   value={salaryInput}
                   onChange={(e) => setSalaryInput(e.target.value)}
                   autoFocus
-                  className="w-28 px-2 py-1 bg-zinc-950 border border-zinc-700 rounded text-xs text-white focus:outline-none"
+                  className="w-28 px-2.5 py-1 bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-600"
                 />
                 <button
                   type="submit"
-                  className="px-2 py-1 bg-white text-black text-[11px] font-semibold rounded cursor-pointer"
+                  className="px-2.5 py-1 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xs hover:bg-emerald-700 cursor-pointer"
                 >
                   Lưu
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsEditingSalary(false)}
-                  className="px-1.5 py-1 text-[11px] text-zinc-500 hover:text-zinc-300 cursor-pointer"
+                  className="px-2 py-1 text-xs text-slate-500 hover:text-slate-700 cursor-pointer"
                 >
                   Hủy
                 </button>
@@ -162,37 +165,41 @@ export const GoalsTracker: React.FC<GoalsTrackerProps> = ({
             )}
           </div>
           <div className="text-right">
-            <span className="text-[11px] uppercase tracking-wider text-zinc-500 block">Tích lũy thực tế</span>
-            <span className="text-sm font-bold text-white tracking-tight">{formatVND(effectiveMonthlyRate)}/tháng</span>
+            <span className="text-[11px] uppercase tracking-wider text-slate-500 font-bold block">
+              Tích lũy thực tế
+            </span>
+            <span className="text-base font-extrabold text-emerald-600 tabular-nums">
+              {formatVND(effectiveMonthlyRate)}/tháng
+            </span>
           </div>
         </div>
 
         {/* Thông tin dòng tiền động theo thực tế */}
-        <div className="pt-2 border-t border-zinc-900 flex items-center justify-between text-[10px] text-zinc-500">
-          <span>Đã chi tháng này: <span className="text-zinc-400">{formatVND(currentMonthSpent)}</span></span>
-          <span>Dự kiến chi cả tháng: <span className="text-zinc-400">~{formatVND(projectedDailyExpense)}</span></span>
+        <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 tabular-nums">
+          <span>Đã chi tháng này: <strong className="text-slate-800">{formatVND(currentMonthSpent)}</strong></span>
+          <span>Dự kiến cả tháng: <strong className="text-slate-800">~{formatVND(projectedDailyExpense)}</strong></span>
         </div>
       </div>
 
       {/* Danh sách mục tiêu xếp tầng */}
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {goalForecasts.map(({ goal, percent, remainingToSave, totalMonthsFromNow }, idx) => {
           return (
             <div
               key={goal.id}
-              className="p-3.5 rounded-xl bg-black border border-zinc-900 hover:border-zinc-800 transition-all space-y-3"
+              className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all space-y-3"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs font-mono">
+                  <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-800 border border-amber-200/70 flex items-center justify-center font-extrabold text-xs tabular-nums shadow-2xs">
                     #{idx + 1}
                   </div>
                   <div>
-                    <h3 className="text-xs font-semibold text-white flex items-center gap-2">
+                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                       {goal.name}
                     </h3>
-                    <p className="text-[11px] font-mono text-zinc-500 mt-0.5">
-                      Dự toán: <span className="text-zinc-300">{formatVND(goal.targetAmount)}</span>
+                    <p className="text-xs text-slate-500 mt-0.5 tabular-nums">
+                      Dự toán: <strong className="text-slate-800">{formatVND(goal.targetAmount)}</strong>
                     </p>
                   </div>
                 </div>
@@ -202,41 +209,41 @@ export const GoalsTracker: React.FC<GoalsTrackerProps> = ({
                   <button
                     disabled={idx === 0}
                     onClick={() => handleSwapPriority(idx, 'up')}
-                    className="p-1 rounded-md bg-zinc-950 hover:bg-zinc-900 border border-zinc-900 disabled:opacity-20 text-zinc-400"
+                    className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 disabled:opacity-25 text-slate-600 transition-colors"
                     title="Ưu tiên cao hơn"
                   >
-                    <ArrowUp className="w-3 h-3" />
+                    <ArrowUp className="w-3.5 h-3.5" />
                   </button>
                   <button
                     disabled={idx === goalForecasts.length - 1}
                     onClick={() => handleSwapPriority(idx, 'down')}
-                    className="p-1 rounded-md bg-zinc-950 hover:bg-zinc-900 border border-zinc-900 disabled:opacity-20 text-zinc-400"
+                    className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 disabled:opacity-25 text-slate-600 transition-colors"
                     title="Ưu tiên thấp hơn"
                   >
-                    <ArrowDown className="w-3 h-3" />
+                    <ArrowDown className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
 
               {/* Thanh tiến độ */}
-              <div className="space-y-1">
-                <div className="flex justify-between text-[11px] font-mono">
-                  <span className="text-zinc-500">Đã tích: {formatVND(goal.currentAmount)}</span>
-                  <span className="text-zinc-300 font-semibold">{percent}%</span>
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs tabular-nums">
+                  <span className="text-slate-500">Đã tích: <strong className="text-slate-800">{formatVND(goal.currentAmount)}</strong></span>
+                  <span className="text-emerald-700 font-bold">{percent}%</span>
                 </div>
-                <div className="w-full h-1 rounded-full bg-zinc-900 overflow-hidden">
+                <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
                   <div
-                    className="h-full bg-white rounded-full transition-all duration-300"
+                    className="h-full bg-emerald-600 rounded-full transition-all duration-300"
                     style={{ width: `${percent}%` }}
-                  ></div>
+                  />
                 </div>
               </div>
 
               {/* Dự báo thời gian cán đích */}
-              <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-900 text-xs text-zinc-400 flex items-center justify-between font-mono text-[11px]">
-                <span>Dự kiến hoàn thành:</span>
-                <span className="text-zinc-200 font-medium flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-zinc-500" />
+              <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600 flex items-center justify-between">
+                <span className="font-medium">Dự kiến hoàn thành:</span>
+                <span className="text-slate-900 font-bold flex items-center gap-1.5 tabular-nums">
+                  <Calendar className="w-3.5 h-3.5 text-emerald-600" />
                   ~{totalMonthsFromNow} tháng nữa
                 </span>
               </div>
@@ -247,49 +254,49 @@ export const GoalsTracker: React.FC<GoalsTrackerProps> = ({
 
       {/* Modal Thêm Mục Tiêu Mới */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
           <form
             onSubmit={handleCreateGoal}
-            className="w-full max-w-sm bg-black border border-zinc-800 rounded-xl p-5 space-y-4 shadow-2xl"
+            className="w-full max-w-sm bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-2xl"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-white">Thêm Mục Tiêu Mới</h3>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">Thêm Mục Tiêu Mới</h3>
               <button
                 type="button"
                 onClick={() => setShowAddModal(false)}
-                className="text-xs text-zinc-500 hover:text-zinc-300"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
               >
-                Đóng
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="space-y-1">
-              <label className="text-[11px] font-mono text-zinc-400">Tên mục tiêu:</label>
+              <label className="text-xs font-semibold text-slate-600">Tên mục tiêu:</label>
               <input
                 type="text"
                 placeholder="VD: Mua điện thoại mới, Du lịch..."
                 value={newGoalName}
                 onChange={(e) => setNewGoalName(e.target.value)}
                 autoFocus
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-[11px] font-mono text-zinc-400">Số tiền dự kiến (VNĐ):</label>
+              <label className="text-xs font-semibold text-slate-600">Số tiền dự kiến (VNĐ):</label>
               <input
                 type="text"
-                placeholder="VD: 15000000"
+                placeholder="VD: 15,000,000"
                 value={newGoalTarget}
-                onChange={(e) => setNewGoalTarget(e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs font-mono text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500"
+                onChange={(e) => setNewGoalTarget(formatNumberWithCommas(e.target.value))}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs tabular-nums text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white"
               />
             </div>
 
             <button
               type="submit"
               disabled={!newGoalName.trim() || !newGoalTarget}
-              className="w-full py-2 bg-white hover:bg-zinc-200 text-black font-semibold rounded-lg text-xs disabled:opacity-30 transition-colors font-mono"
+              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs disabled:opacity-40 transition-colors shadow-sm"
             >
               Thêm vào danh sách ưu tiên
             </button>
