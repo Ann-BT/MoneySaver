@@ -89,9 +89,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
         <div>
           <div className="flex items-center justify-between pb-6 border-b border-slate-100 mb-6">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-xs">
-                <Wallet className="w-5 h-5 stroke-[2.2]" />
-              </div>
+              <img src="/favicon.svg" alt="MoneySaver" className="w-10 h-10 rounded-xl shadow-xs" />
               <div>
                 <h1 className="text-base font-bold tracking-tight text-slate-900 leading-none">MoneySaver</h1>
                 <p className="text-xs text-slate-500 mt-1">Khởi tạo kế hoạch tài chính</p>
