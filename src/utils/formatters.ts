@@ -71,3 +71,16 @@ export function formatDueText(item: RecurringExpense): string {
   }
   return `${timing} hàng tháng`;
 }
+
+export function formatMonthsForecast(totalMonths: number): string {
+  if (totalMonths <= 0) return 'Đã hoàn thành';
+  if (totalMonths < 12) {
+    return `~${totalMonths} tháng nữa`;
+  }
+  const years = Math.floor(totalMonths / 12);
+  const remainingMonths = totalMonths % 12;
+  if (remainingMonths === 0) {
+    return `~${years} năm nữa`;
+  }
+  return `~${years} năm ${remainingMonths} tháng nữa`;
+}

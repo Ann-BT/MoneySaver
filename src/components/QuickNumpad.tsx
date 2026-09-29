@@ -137,7 +137,7 @@ export const QuickNumpad: React.FC<QuickNumpadProps> = ({
           }`}
         >
           <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />
-          <span>+ Thu nhập thêm</span>
+          <span>Thu nhập thêm</span>
         </button>
       </div>
 
@@ -255,10 +255,10 @@ export const QuickNumpad: React.FC<QuickNumpadProps> = ({
         </button>
         <button
           type="button"
-          onClick={() => handleAddK(20000)}
+          onClick={() => handleAddK(30000)}
           className="h-12 rounded-xl bg-emerald-50/70 hover:bg-emerald-100/70 border border-emerald-200/70 text-xs font-bold text-emerald-800 active:scale-95 transition-transform"
         >
-          +20k
+          +30k
         </button>
 
         <button

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FinancialGoal } from '../types';
-import { formatVND, formatNumberWithCommas } from '../utils/formatters';
+import { formatVND, formatNumberWithCommas, formatMonthsForecast } from '../utils/formatters';
 import { Target, TrendingUp, Calendar, ArrowUp, ArrowDown, Plus, Sparkles, Check, X } from 'lucide-react';
 
 interface GoalsTrackerProps {
@@ -191,9 +191,9 @@ export const GoalsTracker: React.FC<GoalsTrackerProps> = ({
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-800 border border-amber-200/70 flex items-center justify-center font-extrabold text-xs tabular-nums shadow-2xs">
-                    #{idx + 1}
-                  </div>
+                  <span className="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs tabular-nums shadow-xs">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
                   <div>
                     <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                       {goal.name}
@@ -244,7 +244,7 @@ export const GoalsTracker: React.FC<GoalsTrackerProps> = ({
                 <span className="font-medium">Dự kiến hoàn thành:</span>
                 <span className="text-slate-900 font-bold flex items-center gap-1.5 tabular-nums">
                   <Calendar className="w-3.5 h-3.5 text-emerald-600" />
-                  ~{totalMonthsFromNow} tháng nữa
+                  {formatMonthsForecast(totalMonthsFromNow)}
                 </span>
               </div>
             </div>

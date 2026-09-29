@@ -148,24 +148,6 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
                     ₫
                   </span>
                 </div>
-
-                {/* Quick Select Buttons */}
-                <div className="grid grid-cols-4 gap-2 pt-1">
-                  {[6000000, 8000000, 10000000, 12000000].map((quick) => (
-                    <button
-                      key={quick}
-                      type="button"
-                      onClick={() => setSalary(quick)}
-                      className={`py-2 text-xs font-semibold rounded-xl border transition-all ${
-                        salary === quick
-                          ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
-                          : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-100/50'
-                      }`}
-                    >
-                      {quick / 1000000}tr
-                    </button>
-                  ))}
-                </div>
               </div>
             </div>
           )}
@@ -323,8 +305,8 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
                       className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 shadow-xs hover:border-slate-300 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-amber-50 text-amber-800 border border-amber-200/60 flex items-center justify-center text-xs font-bold tabular-nums">
-                          #{idx + 1}
+                        <span className="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs font-bold tabular-nums">
+                          {String(idx + 1).padStart(2, '0')}
                         </span>
                         <div>
                           <div className="text-sm font-semibold text-slate-800">{g.name}</div>

@@ -7,7 +7,7 @@ import { GoalsTracker } from './components/GoalsTracker';
 import { TransactionList } from './components/TransactionList';
 import { EmergencyFundManager } from './components/EmergencyFundManager';
 import { DEFAULT_EMERGENCY_FUND } from './data/defaultData';
-import { formatVND, getCurrentMonthKey, isRecurringDueInMonth } from './utils/formatters';
+import { formatVND, getCurrentMonthKey, isRecurringDueInMonth, formatNumberWithCommas, parseNumberFromCommas } from './utils/formatters';
 import {
   Wallet,
   Target,
@@ -52,6 +52,15 @@ export function App() {
 
   const [activeTab, setActiveTab] = useState<'quick' | 'goals' | 'emergency' | 'recurring' | 'history'>('quick');
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
+  const [settingsSalary, setSettingsSalary] = useState<string>('');
+  const [salarySavedMessage, setSalarySavedMessage] = useState<boolean>(false);
+
+  // Cập nhật giá trị lương khi mở modal hoặc khi profile thay đổi
+  React.useEffect(() => {
+    if (state.profile?.monthlySalary) {
+      setSettingsSalary(formatNumberWithCommas(state.profile.monthlySalary));
+    }
+  }, [state.profile?.monthlySalary, showSettingsModal]);
 
   // Nếu chưa hoàn thành onboarding 3 bước, hiển thị wizard theo đúng yêu cầu
   if (!state.profile.isOnboarded) {
@@ -385,10 +394,45 @@ export function App() {
             </div>
 
             <p className="text-xs text-slate-500 leading-relaxed">
-              Dữ liệu của bạn được lưu an toàn trên trình duyệt và tự động đồng bộ lên Supabase Cloud. Bạn cũng có thể tải file sao lưu JSON để lưu trữ ngoại tuyến.
+              Dữ liệu của bạn được lưu an toàn trên trình duyệt và tự động đồng bộ lên Supabase Cloud.
             </p>
 
-            <div className="space-y-2 pt-2">
+            {/* Điều chỉnh Lương cố định */}
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-700">Mức lương hàng tháng:</label>
+                {salarySavedMessage && (
+                  <span className="text-[11px] font-semibold text-emerald-600 animate-in fade-in">
+                    ✓ Đã cập nhật!
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={settingsSalary}
+                  onChange={(e) => setSettingsSalary(formatNumberWithCommas(e.target.value))}
+                  className="flex-1 bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-600 tabular-nums shadow-2xs"
+                  placeholder="VD: 8,000,000"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const num = parseNumberFromCommas(settingsSalary);
+                    if (num > 0) {
+                      updateProfile({ monthlySalary: num });
+                      setSalarySavedMessage(true);
+                      setTimeout(() => setSalarySavedMessage(false), 2000);
+                    }
+                  }}
+                  className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors shrink-0"
+                >
+                  Cập nhật
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2 pt-1">
               <button
                 type="button"
                 onClick={exportData}
