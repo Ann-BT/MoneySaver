@@ -95,11 +95,11 @@ export const DEFAULT_CATEGORIES: CategoryGroup[] = [
     color: '#3b82f6', // blue
     isFixed: true,
     subcategories: [
-      { id: 'rent', name: 'Tiền nhà/trọ (3 tháng/lần)', icon: 'Key' },
+      { id: 'rent', name: 'Tiền nhà/trọ', icon: 'Key' },
       { id: 'utilities', name: 'Điện & Nước', icon: 'Zap' },
-      { id: 'parking', name: 'Gửi xe máy', icon: 'Bike' },
+      { id: 'parking', name: 'Gửi xe', icon: 'Bike' },
       { id: 'internet', name: 'Mạng Internet', icon: 'Wifi' },
-      { id: 'subscription', name: 'YouTube Premium', icon: 'Tv' },
+      { id: 'subscription', name: 'Đăng ký định kỳ', icon: 'Tv' },
     ],
   },
   {
@@ -115,81 +115,9 @@ export const DEFAULT_CATEGORIES: CategoryGroup[] = [
   },
 ];
 
-export const INITIAL_RECURRING_EXPENSES: RecurringExpense[] = [
-  {
-    id: 'rec_rent',
-    name: 'Tiền trọ (3 tháng đóng 1 lần)',
-    subCategoryId: 'rent',
-    amount: 3900000,
-    cycle: 'quarterly',
-    dueOption: 'end_of_month',
-    anchorMonth: '2026-10',
-    notes: 'Đóng vào cuối tháng 10, cứ 3 tháng đóng 1 lần (10/2026 -> 01/2027 -> 04/2027...)',
-  },
-  {
-    id: 'rec_utilities',
-    name: 'Điện nước sinh hoạt',
-    subCategoryId: 'utilities',
-    amount: 600000,
-    cycle: 'monthly',
-    dueOption: 'start_of_month',
-    notes: 'Ước lượng ~600k (có thể sửa số thực tế mỗi tháng)',
-  },
-  {
-    id: 'rec_parking',
-    name: 'Tiền gửi xe',
-    subCategoryId: 'parking',
-    amount: 200000,
-    cycle: 'monthly',
-    dueOption: 'start_of_month',
-  },
-  {
-    id: 'rec_internet',
-    name: 'Tiền mạng cáp quang',
-    subCategoryId: 'internet',
-    amount: 80000,
-    cycle: 'monthly',
-    dueOption: 'start_of_month',
-  },
-  {
-    id: 'rec_youtube',
-    name: 'YouTube Premium gia đình/chia gói',
-    subCategoryId: 'subscription',
-    amount: 60000,
-    cycle: 'monthly',
-    dueOption: 'end_of_month',
-  },
-];
+export const INITIAL_RECURRING_EXPENSES: RecurringExpense[] = [];
 
-export const INITIAL_GOALS: FinancialGoal[] = [
-  {
-    id: 'goal_pc',
-    name: 'Mua Máy Tính Mới 💻',
-    icon: 'Laptop',
-    targetAmount: 20000000, // 20tr dự kiến
-    currentAmount: 0,
-    priority: 1, // Ưu tiên số 1: dồn tiền trước
-    notes: 'Phục vụ học tập, nâng cao tay nghề và làm việc hiệu quả',
-  },
-  {
-    id: 'goal_car',
-    name: 'Học Bằng Lái Xe Ô Tô 🚗',
-    icon: 'Car',
-    targetAmount: 18000000, // 18tr dự kiến
-    currentAmount: 0,
-    priority: 2, // Ưu tiên số 2
-    notes: 'Khóa học thực hành và thi lấy bằng B2',
-  },
-  {
-    id: 'goal_master',
-    name: 'Quỹ Học Thạc Sĩ 🎓',
-    icon: 'GraduationCap',
-    targetAmount: 50000000, // 50tr
-    currentAmount: 0,
-    priority: 3, // Ưu tiên số 3
-    notes: 'Học phí chương trình cao học trong tương lai',
-  },
-];
+export const INITIAL_GOALS: FinancialGoal[] = [];
 
 export const DEFAULT_EMERGENCY_FUND = {
   monthlyAllocation: 200000, // 200.000đ mỗi tháng
@@ -203,11 +131,11 @@ export const DEFAULT_INITIAL_STATE: AppState = {
     isOnboarded: false,
     monthlySalary: 8000000,
     payday: 5,
-    theme: 'dark',
+    theme: 'light',
   },
   categories: DEFAULT_CATEGORIES,
-  recurringExpenses: INITIAL_RECURRING_EXPENSES,
+  recurringExpenses: [],
   transactions: [],
-  goals: INITIAL_GOALS,
+  goals: [],
   emergencyFund: DEFAULT_EMERGENCY_FUND,
 };

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { RecurringExpense, FinancialGoal, DueOption } from '../types';
-import { INITIAL_RECURRING_EXPENSES, INITIAL_GOALS } from '../data/defaultData';
 import { formatVND, formatDueText, formatNumberWithCommas } from '../utils/formatters';
-import { ChevronRight, ShieldCheck, Sparkles, Plus, Trash2, ArrowLeft, Wallet, Calendar, Target } from 'lucide-react';
+import { ChevronRight, Sparkles, Plus, Trash2, ArrowLeft, Wallet } from 'lucide-react';
 
 interface OnboardingWizardProps {
   onComplete: (salary: number, recurring: RecurringExpense[], goals: FinancialGoal[]) => void;
@@ -11,8 +10,8 @@ interface OnboardingWizardProps {
 export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const [step, setStep] = useState<number>(1);
   const [salary, setSalary] = useState<number>(8000000);
-  const [recurringList, setRecurringList] = useState<RecurringExpense[]>(INITIAL_RECURRING_EXPENSES);
-  const [goalsList, setGoalsList] = useState<FinancialGoal[]>(INITIAL_GOALS);
+  const [recurringList, setRecurringList] = useState<RecurringExpense[]>([]);
+  const [goalsList, setGoalsList] = useState<FinancialGoal[]>([]);
 
   // Thêm khoản chi cố định mới
   const [newRecName, setNewRecName] = useState('');
@@ -85,7 +84,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-3 sm:p-6 text-slate-800">
-      <div className="w-full max-w-lg bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-8 flex flex-col justify-between min-h-[620px]">
+      <div className="w-full max-w-lg bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-8 flex flex-col justify-between min-h-[580px]">
         {/* Header & Step Bar */}
         <div>
           <div className="flex items-center justify-between pb-6 border-b border-slate-100 mb-6">
@@ -129,7 +128,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
                 </span>
                 <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Mức lương hàng tháng của bạn?</h2>
                 <p className="text-sm text-slate-500 leading-relaxed">
-                  Nhập mức lương ổn định nhận đều đặn mỗi tháng để làm căn cứ chia ngân sách.
+                  Nhập mức lương cố định nhận hàng tháng.
                 </p>
               </div>
 
@@ -167,11 +166,6 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
                     </button>
                   ))}
                 </div>
-
-                <div className="pt-2 text-xs text-slate-600 flex items-start gap-2 bg-emerald-50/60 border border-emerald-100 p-3 rounded-xl">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Mọi khoản tiền dôi dư sau khi trừ chi phí thiết yếu sẽ tự động tích lũy vào các mục tiêu của bạn.</span>
-                </div>
               </div>
             </div>
           )}
@@ -183,40 +177,49 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-sky-700 bg-sky-50 border border-sky-200/60 px-2.5 py-0.5 rounded-full">
                   02 • Chi phí cố định
                 </span>
-                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Khoản chi định kỳ</h2>
+                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Các khoản chi định kỳ</h2>
                 <p className="text-sm text-slate-500 leading-relaxed">
                   Thiết lập hạn đóng (đầu tháng / cuối tháng) và chu kỳ thanh toán linh hoạt.
                 </p>
               </div>
 
-              {/* Danh sách khoản cố định */}
-              <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
-                {recurringList.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 shadow-xs hover:border-slate-300 transition-colors"
-                  >
-                    <div>
-                      <div className="text-sm font-semibold text-slate-800">{item.name}</div>
-                      <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
-                        <span className="font-semibold text-slate-900 tabular-nums">{formatVND(item.amount)}</span>
-                        <span>•</span>
-                        <span className="inline-block px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-medium text-[11px]">
-                          {formatDueText(item)}
-                        </span>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveRecurring(item.id)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                      title="Xóa khoản này"
+              {/* Danh sách khoản cố định tự tạo */}
+              {recurringList.length === 0 ? (
+                <div className="p-6 rounded-2xl border border-dashed border-slate-200 text-center space-y-1 bg-slate-50/50">
+                  <p className="text-xs font-semibold text-slate-700">Chưa có khoản chi định kỳ nào</p>
+                  <p className="text-[11px] text-slate-500">
+                    Điền tên và số tiền bên dưới để thêm các khoản chi của bạn (tiền trọ, điện nước, xe...).
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                  {recurringList.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 shadow-xs hover:border-slate-300 transition-colors"
                     >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                      <div>
+                        <div className="text-sm font-semibold text-slate-800">{item.name}</div>
+                        <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+                          <span className="font-semibold text-slate-900 tabular-nums">{formatVND(item.amount)}</span>
+                          <span>•</span>
+                          <span className="inline-block px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-medium text-[11px]">
+                            {formatDueText(item)}
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveRecurring(item.id)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                        title="Xóa khoản này"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Form thêm nhanh khoản mới */}
               <form onSubmit={handleAddRecurring} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
@@ -224,14 +227,14 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
                 <div className="grid grid-cols-2 gap-2">
                   <input
                     type="text"
-                    placeholder="Tên khoản (VD: Giặt sấy)"
+                    placeholder="Tên khoản (VD: Tiền nhà)"
                     value={newRecName}
                     onChange={(e) => setNewRecName(e.target.value)}
                     className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/10"
                   />
                   <input
                     type="text"
-                    placeholder="Số tiền (VD: 150,000)"
+                    placeholder="Số tiền (VD: 3,000,000)"
                     value={newRecAmount}
                     onChange={(e) => setNewRecAmount(formatNumberWithCommas(e.target.value))}
                     className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/10 tabular-nums"
@@ -282,11 +285,13 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
                 </div>
               </form>
 
-              {/* Tóm tắt */}
-              <div className="p-3 rounded-xl bg-sky-50/80 border border-sky-200/70 text-xs text-sky-800 flex items-center justify-between">
-                <span className="font-medium">Ước tính cố định quy đổi / tháng:</span>
-                <span className="font-bold text-slate-900 tabular-nums">{formatVND(Math.round(totalMonthlyFixed))}</span>
-              </div>
+              {/* Tóm tắt quy đổi */}
+              {recurringList.length > 0 && (
+                <div className="p-3 rounded-xl bg-sky-50/80 border border-sky-200/70 text-xs text-sky-800 flex items-center justify-between">
+                  <span className="font-medium">Ước tính cố định quy đổi / tháng:</span>
+                  <span className="font-bold text-slate-900 tabular-nums">{formatVND(Math.round(totalMonthlyFixed))}</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -299,36 +304,45 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }
                 </span>
                 <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Thứ tự ưu tiên tích lũy</h2>
                 <p className="text-sm text-slate-500 leading-relaxed">
-                  Tiền dư mỗi tháng sẽ dồn ưu tiên vào mục tiêu #1. Khi hoàn thành sẽ tự động dồn tiếp sang mục tiêu kế tiếp.
+                  Tiền dư mỗi tháng sẽ tự động dồn lần lượt theo thứ tự ưu tiên các mục tiêu do bạn thiết lập.
                 </p>
               </div>
 
-              <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
-                {goalsList.map((g, idx) => (
-                  <div
-                    key={g.id}
-                    className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 shadow-xs hover:border-slate-300 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="w-7 h-7 rounded-lg bg-amber-50 text-amber-800 border border-amber-200/60 flex items-center justify-center text-xs font-bold tabular-nums">
-                        #{idx + 1}
-                      </span>
-                      <div>
-                        <div className="text-sm font-semibold text-slate-800">{g.name}</div>
-                        <div className="text-xs text-slate-500 tabular-nums">Dự toán: <strong className="text-slate-800">{formatVND(g.targetAmount)}</strong></div>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveGoal(g.id)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                      title="Xóa mục tiêu"
+              {goalsList.length === 0 ? (
+                <div className="p-6 rounded-2xl border border-dashed border-slate-200 text-center space-y-1 bg-slate-50/50">
+                  <p className="text-xs font-semibold text-slate-700">Chưa có mục tiêu nào</p>
+                  <p className="text-[11px] text-slate-500">
+                    Thêm mục tiêu bạn muốn tích lũy bên dưới, hoặc bấm bắt đầu để thêm sau trong ứng dụng.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                  {goalsList.map((g, idx) => (
+                    <div
+                      key={g.id}
+                      className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 shadow-xs hover:border-slate-300 transition-colors"
                     >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                      <div className="flex items-center gap-3">
+                        <span className="w-7 h-7 rounded-lg bg-amber-50 text-amber-800 border border-amber-200/60 flex items-center justify-center text-xs font-bold tabular-nums">
+                          #{idx + 1}
+                        </span>
+                        <div>
+                          <div className="text-sm font-semibold text-slate-800">{g.name}</div>
+                          <div className="text-xs text-slate-500 tabular-nums">Dự toán: <strong className="text-slate-800">{formatVND(g.targetAmount)}</strong></div>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveGoal(g.id)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                        title="Xóa mục tiêu"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Form thêm mục tiêu mới */}
               <form onSubmit={handleAddGoal} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
