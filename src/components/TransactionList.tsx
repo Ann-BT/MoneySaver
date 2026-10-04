@@ -15,6 +15,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
   categories,
   onDeleteTransaction,
 }) => {
+  const [filterType, setFilterType] = useState<'all' | 'expense' | 'income'>('all');
   const [filterGroup, setFilterGroup] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
@@ -24,6 +25,8 @@ export const TransactionList: React.FC<TransactionListProps> = ({
 
   // Lọc giao dịch
   const filtered = transactions.filter((tx) => {
+    if (filterType === 'expense' && tx.type === 'income') return false;
+    if (filterType === 'income' && tx.type !== 'income') return false;
     if (filterGroup !== 'all' && tx.groupId !== filterGroup) return false;
     if (searchTerm) {
       const matchName = tx.subCategoryName.toLowerCase().includes(searchTerm.toLowerCase());
@@ -56,6 +59,45 @@ export const TransactionList: React.FC<TransactionListProps> = ({
     <div className="space-y-4">
       {/* Bộ Lọc & Tìm Kiếm */}
       <div className="space-y-2">
+        {/* Tab Lọc: Tất cả / Khoản chi / Thu nhập */}
+        <div className="grid grid-cols-3 gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200/80">
+          <button
+            type="button"
+            onClick={() => setFilterType('all')}
+            className={`py-1.5 rounded-lg text-xs font-bold transition-all ${
+              filterType === 'all'
+                ? 'bg-white text-slate-900 shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Tất cả
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterType('expense')}
+            className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-all ${
+              filterType === 'expense'
+                ? 'bg-white text-rose-600 shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <ArrowDownLeft className="w-3.5 h-3.5 text-rose-500" />
+            <span>Khoản chi</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterType('income')}
+            className={`py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-all ${
+              filterType === 'income'
+                ? 'bg-white text-emerald-600 shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Thu thêm</span>
+          </button>
+        </div>
+
         <div className="relative">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -123,7 +165,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                 key={monthKey}
                 className="rounded-2xl bg-white border border-slate-200/90 shadow-xs overflow-hidden transition-all"
               >
-                {/* Header Tháng */}
+                {/* Header Tháng - Hiển thị rõ cả Thu và Chi */}
                 <button
                   type="button"
                   onClick={() => toggleMonth(monthKey)}
@@ -137,21 +179,23 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                       <h3 className="text-xs font-bold text-slate-900 flex items-center gap-2">
                         <span>Tháng {monthKey}</span>
                         <span className="text-[11px] text-slate-400 font-normal">
-                          ({list.length})
+                          ({list.length} giao dịch)
                         </span>
                       </h3>
                     </div>
                   </div>
 
-                  <div className="text-right tabular-nums">
-                    <div className="text-xs font-bold text-slate-900">
-                      Chi: {formatVND(monthExpense)}
-                    </div>
-                    {monthIncome > 0 && (
-                      <div className="text-[11px] text-emerald-700 font-semibold">
-                        + {formatVND(monthIncome)}
+                  <div className="flex items-center gap-3 text-right tabular-nums">
+                    <div className="flex flex-col items-end">
+                      <div className="flex items-center gap-1 text-xs font-bold text-slate-900">
+                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Chi</span>
+                        <span>{formatVND(monthExpense)}</span>
                       </div>
-                    )}
+                      <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600">
+                        <span className="text-[10px] font-semibold text-emerald-600/70 uppercase tracking-wider">Thu</span>
+                        <span>+{formatVND(monthIncome)}</span>
+                      </div>
+                    </div>
                   </div>
                 </button>
 
